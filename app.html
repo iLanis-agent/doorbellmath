@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doorbell math - calculators</title>
+<style>
+  :root { --accent: #8f7d3f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: #faf9f5; color: #2e2b23; line-height: 1.55; }
+  main { max-width: 1100px; margin: 0 auto; padding: 40px 20px 64px; }
+  h1 { font-size: 2rem; margin: 0 0 8px; color: var(--accent); }
+  .lede { margin: 0 0 28px; max-width: 640px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  section { background: #fff; border: 1px solid #e4e0d2; border-radius: 8px; padding: 20px 22px; }
+  h2 { font-size: 1.15rem; margin: 0 0 6px; }
+  .hint { font-size: 0.9rem; color: #7a7358; margin: 0 0 14px; }
+  label { display: block; font-size: 0.9rem; margin: 10px 0 3px; }
+  input { width: 100%; padding: 8px 10px; font-size: 1rem; border: 1px solid #cfc8ae; border-radius: 5px; font-family: inherit; }
+  button { margin-top: 16px; width: 100%; padding: 11px; background: var(--accent); color: #fff; border: 0; border-radius: 6px; font-size: 1rem; cursor: pointer; font-family: inherit; }
+  button:hover { filter: brightness(1.08); }
+  .out { margin-top: 14px; font-size: 1rem; min-height: 1.4em; }
+  .out.err { color: #a32222; }
+  footer { max-width: 1100px; margin: 0 auto; padding: 0 20px 40px; font-size: 0.85rem; color: #a39d88; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Doorbell math</h1>
+  <p class="lede">Days between charges, the transformer question behind a video bell, and what the electricity actually costs. Exact arithmetic, every borrowed number labeled - the bell maker's spec and a qualified electrician decide what is safe to wire.</p>
+  <div class="grid">
+    <section>
+      <h2>Battery plan</h2>
+      <p class="hint">A battery doorbell becomes days between charges.</p>
+      <label for="b-cap">Battery capacity (mAh)</label>
+      <input id="b-cap" type="number" value="6000" min="0" step="500">
+      <label for="b-use">Usable capacity (%)</label>
+      <input id="b-use" type="number" value="80" min="0" step="5">
+      <label for="b-rings">Rings per day</label>
+      <input id="b-rings" type="number" value="8" min="0" step="1">
+      <label for="b-ma">Active draw per ring (mA)</label>
+      <input id="b-ma" type="number" value="300" min="0" step="50">
+      <label for="b-sec">Active seconds per ring</label>
+      <input id="b-sec" type="number" value="20" min="0" step="5">
+      <label for="b-standby">Standby draw (mA)</label>
+      <input id="b-standby" type="number" value="2.5" min="0" step="0.5">
+      <button id="b-go">Time the charge</button>
+      <div class="out" id="b-out"></div>
+    </section>
+    <section>
+      <h2>Transformer plan</h2>
+      <p class="hint">Headroom margin estimate - the bell maker's rating decides.</p>
+      <label for="t-va">Transformer rating (VA)</label>
+      <input id="t-va" type="number" value="10" min="0" step="5">
+      <label for="t-bell">Doorbell draw (VA)</label>
+      <input id="t-bell" type="number" value="5" min="0" step="1">
+      <label for="t-chime">Chime draw (VA)</label>
+      <input id="t-chime" type="number" value="3" min="0" step="1">
+      <button id="t-go">Check the headroom</button>
+      <div class="out" id="t-out"></div>
+    </section>
+    <section>
+      <h2>Power plan</h2>
+      <p class="hint">Charging versus wiring, in money.</p>
+      <label for="p-cap">Battery capacity (mAh)</label>
+      <input id="p-cap" type="number" value="6000" min="0" step="500">
+      <label for="p-volts">Pack voltage (V)</label>
+      <input id="p-volts" type="number" value="5" min="0" step="0.5">
+      <label for="p-charges">Charges per year</label>
+      <input id="p-charges" type="number" value="6" min="0" step="1">
+      <label for="p-watts">Wired bell draw (W)</label>
+      <input id="p-watts" type="number" value="2" min="0" step="0.5">
+      <label for="p-price">Electricity price (cents per kWh)</label>
+      <input id="p-price" type="number" value="15" min="0" step="1">
+      <button id="p-go">Price the power</button>
+      <div class="out" id="p-out"></div>
+    </section>
+  </div>
+</main>
+<footer>Built by the app factory. <a href="index.html">About</a> &middot; <a href="https://github.com/iLanis-agent/doorbellmath">Source</a></footer>
+<script src="engine.js"></script>
+<script>
+function num(id){ return parseFloat(document.getElementById(id).value); }
+function show(id, r, render){
+  var el = document.getElementById(id);
+  if (r.error) { el.textContent = r.error; el.classList.add('err'); }
+  else { el.textContent = render(r); el.classList.remove('err'); }
+}
+document.getElementById('b-go').addEventListener('click', function(){
+  show('b-out', DoorbellMath.batteryPlan(num('b-cap'),num('b-use'),num('b-rings'),num('b-ma'),num('b-sec'),num('b-standby')), function(r){ return DoorbellMath.renderBattery(r, num('b-cap'),num('b-use'),num('b-rings'),num('b-ma'),num('b-sec'),num('b-standby')); });
+});
+document.getElementById('t-go').addEventListener('click', function(){
+  show('t-out', DoorbellMath.transformerPlan(num('t-va'),num('t-bell'),num('t-chime')), function(r){ return DoorbellMath.renderTransformer(r, num('t-va'),num('t-bell'),num('t-chime')); });
+});
+document.getElementById('p-go').addEventListener('click', function(){
+  show('p-out', DoorbellMath.powerPlan(num('p-cap'),num('p-volts'),num('p-charges'),num('p-watts'),num('p-price')), function(r){ return DoorbellMath.renderPower(r, num('p-cap'),num('p-volts'),num('p-charges'),num('p-watts'),num('p-price')); });
+});
+</script>
+</body>
+        </html>
