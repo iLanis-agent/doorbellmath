@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doorbell math - battery days, transformer headroom and the cost of a ding</title>
+<style>
+  :root { --accent: #8f7d3f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: #faf9f5; color: #2e2b23; line-height: 1.55; }
+  main { max-width: 720px; margin: 0 auto; padding: 48px 20px 64px; }
+  h1 { font-size: 2.4rem; margin: 0 0 12px; color: var(--accent); }
+  h2 { font-size: 1.25rem; margin: 40px 0 12px; }
+  p { margin: 0 0 14px; }
+  a { color: var(--accent); }
+  .cta { display: inline-block; margin: 10px 0 8px; padding: 12px 22px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 6px; font-size: 1.05rem; }
+  ul { padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  .norms { background: #fff; border: 1px solid #e4e0d2; border-left: 4px solid var(--accent); border-radius: 6px; padding: 14px 18px; margin-top: 12px; }
+  footer { max-width: 720px; margin: 0 auto; padding: 0 20px 40px; font-size: 0.85rem; color: #a39d88; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Doorbell math</h1>
+  <p>The battery doorbell dies two days before the package arrives, and nobody knows if the old doorbell transformer in the wall can carry a video bell. Doorbell math turns the pack, the rings and the standby drain into days between charges, reads the transformer rating against the bell and chime draw for a labeled headroom margin, and prices charging against wiring in real money. Exact arithmetic, every borrowed number labeled.</p>
+  <a class="cta" href="app.html">Open the calculators</a>
+  <h2>The three tools</h2>
+  <ul>
+    <li><strong>Battery plan</strong> - capacity, rings and standby drain become days between charges.</li>
+    <li><strong>Transformer plan</strong> - transformer VA versus bell and chime draw becomes a labeled headroom margin.</li>
+    <li><strong>Power plan</strong> - charging the pack versus a wired bell, priced in cents a year.</li>
+  </ul>
+  <h2>Labeled norms</h2>
+  <div class="norms">
+    Labeled pack: 6000 mAh at 80% usable. Labeled ring: 300 mA for 20 seconds, 8 rings a day, 2.5 mA standby. Labeled transformer: 10 VA. Labeled grid price: 15 cents a kWh. These are reference values, not specs - the headroom verdict is a planning estimate, and the bell maker's rating and a qualified electrician decide what is safe to wire.
+  </div>
+</main>
+<footer>Built by the app factory. <a href="https://github.com/iLanis-agent/doorbellmath">Source on GitHub</a></footer>
+</body>
+</html>
